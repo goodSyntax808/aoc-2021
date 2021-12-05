@@ -7,50 +7,19 @@ fn parse_input_day1(input: &str) -> Result<Vec<i32>, ParseIntError> {
 }
 
 #[aoc(day1, part1)]
-pub fn count_increases(input: &[i32]) -> u32 {
-    if input.len() == 0 {
-        return 0;
-    }
-    let mut iter = input.iter();
-    let mut prev_val = iter.next().unwrap();
-    let mut i = 0;
-    for val in iter {
-        if prev_val < val {
-            i += 1;
-        }
-        prev_val = val;
-    }
-
-    return i;
-}
-
-pub fn count_increases_windowed(input: &[i32], window_size: u32) -> u32 {
-    let mut num_increases = 0;
-    let mut prev_sum = None;
-    let len = input.len();
-
-    for (i, val) in input.into_iter().enumerate() {
-        if len - i < window_size as usize {
-            break;
-        }
-        let mut sum = val.clone();
-        for j in 1..window_size {
-            // ideally would handle overflow errors with the casting
-            sum += input[i + j as usize];
-        }
-
-        if prev_sum.is_some() && prev_sum.unwrap() < sum {
-            num_increases += 1;
-        }
-        prev_sum = Some(sum);
-    }
-
-    num_increases
+pub fn count_increases(input: &[i32]) -> usize {
+    input
+        .windows(2)
+        .filter(|window| window[0] < window[1])
+        .count()
 }
 
 #[aoc(day1, part2)]
-pub fn count_increases_3day_window(input: &[i32]) -> u32 {
-    count_increases_windowed(input, 3)
+pub fn count_increases_3day_window(input: &[i32]) -> usize {
+    input
+        .windows(4)
+        .filter(|window| window[0] < window[3])
+        .count()
 }
 
 #[cfg(test)]
